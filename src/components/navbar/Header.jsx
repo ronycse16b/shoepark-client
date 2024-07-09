@@ -94,6 +94,12 @@ const Header = () => {
               </div>
             </div>
           </div>
+          <marquee className="bg-red-600 font-bold text-white">
+            {" "}
+            প্রিয় ব্যবহারকারী, আমাদের ওয়েবসাইটটি আপডেটের কাজ চলছে। সাময়িক
+            অসুবিধার জন্য আমরা দুঃখিত। আপনার ধৈর্যের জন্য ধন্যবাদ। শীঘ্রই আবার
+            দেখা হবে
+          </marquee>
         </Container>
       </section>
     </>
