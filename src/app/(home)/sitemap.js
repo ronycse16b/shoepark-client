@@ -10,7 +10,7 @@ export default async function sitemap() {
   const products = await fetchProducts();
 
   const productUrls = products?.products.map(product => ({
-    url: `https://iconicleatherbd.com/product/${product.slug}`,
+    url: `https://shoeparkbd.com/product/${product.slug}`,
     lastModified: new Date(),
     changeFrequency: 'weekly',
     priority: 0.5,
@@ -18,31 +18,31 @@ export default async function sitemap() {
 
   return [
     {
-      url: 'https://iconicleatherbd.com/',
+      url: 'https://shoeparkbd.com/',
       lastModified: new Date(),
       changeFrequency: 'yearly',
       priority: 1,
     },
     {
-      url: 'https://iconicleatherbd.com/',
+      url: 'https://shoeparkbd.com/',
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,
     },
     {
-      url: 'https://iconicleatherbd.com/about',
+      url: 'https://shoeparkbd.com/about',
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
-      url: 'https://iconicleatherbd.com/contact',
+      url: 'https://shoeparkbd.com/contact',
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
-      url: 'https://iconicleatherbd.com/products',
+      url: 'https://shoeparkbd.com/products',
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.5,

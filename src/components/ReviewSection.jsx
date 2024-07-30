@@ -60,7 +60,7 @@ const ReviewSection = () => {
 
   return (
     <div className=" rounded-lg overflow-hidden  mb-6">
-      <h2 className="text-xl font-semibold mb-4">Customer Reviews</h2>
+      <h2 className="sm:text-xl font-semibold mb-4">Customer Reviews</h2>
       {reviews.map((review) => (
         <div key={review.id} className=" bg-white p-4 mb-2 shadow rounded-md flex justify-between">
           <div>

@@ -7,7 +7,7 @@ export default function robots() {
           disallow: '/private/',
         },
       ],
-      sitemap: 'https://iconicleatherbd.com/sitemap.xml',
+      sitemap: 'https://shoeparkbd.com/sitemap.xml',
     };
   }
   

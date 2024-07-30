@@ -321,7 +321,7 @@ export default function ProductDetails({ singleData }) {
               </span>
             </section>
 
-            <section className={`font-bold flex items-center justify-between `}>
+            <section className={`font-bold flex flex-wrap items-center justify-between `}>
               <h1>
                 অর্ডার করার আগে সাইজ সিলেক্ট করুন{" "}
                 <span className="text-red-600"> *</span>{" "}
@@ -329,7 +329,7 @@ export default function ProductDetails({ singleData }) {
               <h1>
                 <button
                   onClick={() => setOpenModal(true)}
-                  className=" bg-primary text-white rounded-md text-sm px-2 py-0.5"
+                  className=" bg-primary text-white rounded-md text-xs lg:text-sm px-2 py-0.5"
                 >
                   Size Chart
                 </button>
@@ -385,11 +385,11 @@ export default function ProductDetails({ singleData }) {
                 <button
                   onClick={handleToggleToOrderForm}
                   disabled={!selectedSize}
-                  className={`rounded-md border border-primary   
+                  className={`rounded-md shadow-md   
                     px-3 py-2   ${
                       selectedSize
-                        ? "bg-black text-white hover:bg-opacity-55"
-                        : "bg-rose-600 text-white cursor-pointer hover:bg-opacity-70 "
+                        ? "bg-rose-600 text-white hover:bg-opacity-55"
+                        : "bg-rose-500 text-white cursor-pointer hover:bg-opacity-70 "
                     }`}
                 >
                   Buy Now
@@ -397,22 +397,21 @@ export default function ProductDetails({ singleData }) {
                 <button
                   onClick={handleToggleToOrderForm}
                   disabled={!selectedSize}
-                  className={`rounded-md border border-primary   
+                  className={`rounded-md shadow-md
                     px-3 py-2   ${
                       selectedSize
-                        ? "bg-black text-white hover:bg-opacity-55"
-                        : "bg-primary text-white cursor-pointer hover:bg-opacity-70 "
+                        ? "bg-primary text-white hover:bg-opacity-55"
+                        : "bg-primary/80 text-white cursor-pointer hover:bg-opacity-70 "
                     }`}
                 >
                   Add to Cart
                 </button>
                 {!selectedSize && (
-                  <section className="absolute -right-[200px] top-0 flex cursor-pointer whitespace-nowrap opacity-0 duration-500 hover:hidden group-hover:-right-[220px] group-hover:opacity-100">
-                    <p className="h-fit rounded-md bg-[#0EA5E9] px-3 py-2 text-white shadow-[0px_0px_10px_0px_#0EA5E9]">
-                      আগে সাইজ সিলেক্ট করুন
-                    </p>
-                    <span className="absolute -left-2 top-[50%] h-0 w-0 -translate-y-1/2 -rotate-[135deg] border-b-[20px] border-r-[20px] border-b-transparent border-r-[#0EA5E9] shadow-[0px_0px_10px_0px_#0EA5E9]"></span>
-                  </section>
+                 
+                  <div className="absolute -bottom-12 -right-16 cursor-pointer whitespace-nowrap opacity-0 duration-500 hover:hidden group-hover:-bottom-16 group-hover:opacity-100  ">
+                  <p className="rounded-md bg-[#0EA5E9] px-3 py-2 text-white shadow-[0px_0px_10px_0px_#0EA5E9]"> সাইজ সিলেক্ট করুন</p>
+                  <span className="absolute -top-2 left-[15%] h-0 w-0 -translate-x-1/2 -rotate-[45deg] border-b-[20px] border-r-[20px] border-b-transparent border-r-[#0EA5E9] shadow-[0px_0px_10px_0px_#0EA5E9]"></span>
+              </div>
                 )}
               </section>
             </section>

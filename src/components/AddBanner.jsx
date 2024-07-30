@@ -119,7 +119,7 @@ export default function FileUpload5() {
       <div className="my-5">
         {isLoading && "Loading..."}
 
-        <label className="flex flex-col items-center justify-center max-w-3xl mx-auto p-6 bg-white border-2 border-dashed border-gray-400 rounded-lg cursor-pointer">
+       { images?.length ? 'Preview Image' : <label className="flex flex-col items-center justify-center max-w-3xl mx-auto p-6 bg-white border-2 border-dashed border-gray-400 rounded-lg cursor-pointer">
           <CloudUploadIcon className="h-10 w-10 text-gray-500" />
           <span className="mt-2 text-lg font-medium tracking-tight">
             Upload your file
@@ -135,7 +135,7 @@ export default function FileUpload5() {
             multiple
             accept=".png,.jpg,.jpeg"
           />
-        </label>
+        </label>}
         {images.length > 0 && (
           <div className="flex flex-wrap gap-4 mt-6">
             {images.map((image, index) => (
@@ -143,7 +143,7 @@ export default function FileUpload5() {
                 <Image
                   height={100}
                   width={100}
-                  className="w-full max-w-[400px] rounded-lg object-cover"
+                  className="w-full max-w-[200px] rounded-lg object-cover"
                   src={image.preview}
                   alt={image.name}
                 />
@@ -171,25 +171,30 @@ export default function FileUpload5() {
             onClick={handleCreateBanner}
             className="bg-blue-500 text-white py-2 mt-10 px-4 rounded-md"
           >
-            {loading ? "Uploading..." : "Upload Your Banner"}
+            {loading ? "Uploading..." : "Upload Banner"}
           </button>
         </div>
       </div>
-      <div className="overflow-auto h-[400px] grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
+      <h1 className="border-b border-white mb-3">All Banners</h1>
+      <div className="overflow-auto h-[260px] grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
         {bannerImages?.map((b, index) => (
           <div key={index} className="relative ">
             <Image
               src={b?.image}
               width={400}
               height={200}
-              className="w-full h-[300px] object-center rounded-lg border border-primary"
+              className="w-full h-[260px] object-center rounded-lg border border-primary"
               alt="Banner"
             />
             <button
               className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full"
               onClick={() => handleDelete(b?._id, index)}
             >
-              {isDeleting === index ? "Deleting..." : <TrashIcon className="h-5 w-5" />}
+              {isDeleting === index ? (
+                "Deleting..."
+              ) : (
+                <TrashIcon className="h-5 w-5" />
+              )}
             </button>
           </div>
         ))}

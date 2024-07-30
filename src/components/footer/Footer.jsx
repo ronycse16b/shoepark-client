@@ -4,7 +4,7 @@ import Container from "../Container";
 
 const Footer = () => {
   return (
-    <footer className="mx-auto bg-gray-800 text-gray-300 py-8">
+    <footer className="mx-auto bg-gray-800 text-gray-300 lg:py-8 px-8 lg:px-0">
       <Container>
         <div>
           <div className="flex justify-between items-center mb-8">

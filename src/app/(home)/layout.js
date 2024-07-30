@@ -1,5 +1,6 @@
+
+// import { useEffect } from 'react';
 import SpeedDial from "@/components/SpeedDial/SpeedDial";
-import { NavBar } from "@/components/navbar/Navbar";
 import { Inter } from "next/font/google";
 import { Suspense } from "react";
 import toast, { Toaster } from "react-hot-toast";
@@ -10,23 +11,29 @@ import "../globals.css";
 import Loading from "./loading";
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/navbar/Header";
+import { AOSInit } from "@/utils/aos";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: {
-    default: "Home || Iconic Leather BD",
-    template: "%s-iconic leather BD",
+    default: "Home | Shoe Park",
+    template: "%s-Shoe park BD",
   },
   description:
-    "Iconic Leather Shoes BD - Your trusted store for premium leather footwear. Discover our exclusive collection of handcrafted leather shoes for men and women. Shop now for high-quality, durable, and stylish leather footwear. Explore a variety of designs including formal shoes, casual loafers, and trendy boots. Perfect for any occasion. Enjoy free shipping, easy returns, and exceptional customer service. Experience the best in leather craftsmanship at Iconic Leather Shoes BD",
+    "Shoe Park BD - Your trusted store for premium leather footwear. Discover our exclusive collection of handcrafted leather shoes for men and women. Shop now for high-quality, durable, and stylish leather footwear. Explore a variety of designs including formal shoes, casual loafers, and trendy boots. Perfect for any occasion. Enjoy free shipping, easy returns, and exceptional customer service. Experience the best in leather craftsmanship at Shoe Park BD",
   keywords:
-    "Iconic Leather Shoes BD - Your trusted store for premium leather footwear. Discover our exclusive collection of handcrafted leather shoes for men and women. Shop now for high-quality, durable, and stylish leather footwear. Explore a variety of designs including formal shoes, casual loafers, and trendy boots. Perfect for any occasion. Enjoy free shipping, easy returns, and exceptional customer service. Experience the best in leather craftsmanship at Iconic Leather Shoes BD",
+    "Shoe Park BD - Your trusted store for premium leather footwear. Discover our exclusive collection of handcrafted leather shoes for men and women. Shop now for high-quality, durable, and stylish leather footwear. Explore a variety of designs including formal shoes, casual loafers, and trendy boots. Perfect for any occasion. Enjoy free shipping, easy returns, and exceptional customer service. Experience the best in leather craftsmanship at Shoe Park BD",
 };
 
 export default function RootLayout({ children }) {
+
+ 
+
   return (
     <html lang="en">
+      <AOSInit/>
       <Head>
         {/* Google Tag Manager */}
         <script
@@ -44,8 +51,7 @@ export default function RootLayout({ children }) {
       </Head>
       <body className={inter.className} suppressHydrationWarning={true}>
         <StoreProvider>
-          {/* <NavBar /> */}
-          <Header/>
+          <Header />
           <Suspense fallback={<Loading />}>{children}</Suspense>
           <Footer />
           <Toaster />

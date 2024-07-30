@@ -1,19 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { userLogin } from "@/redux/features/auth/authActions";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { userLogin } from "@/redux/features/auth/authActions";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [login, setLogin] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  const { error } = useAppSelector((state) => state.auth);
+  const { userInfo,error,loading } = useAppSelector((state) => state.auth);
+  
   const dispatch = useAppDispatch();
   const router = useRouter();
 
@@ -22,114 +22,27 @@ export default function Login() {
     setLogin(true);
     const action = await dispatch(userLogin({ email, password }));
     if (action.meta.requestStatus === "fulfilled") {
-      router.push("/dashboard");
+
+
+      // Check if user is admin or not
+
+
+      if(action?.payload?.role === "admin"){
+        router.push("/dashboard");
+        toast.success("Login Successfully");
+        return;
+      }
+      router.push("/");
       toast.success("Login Successfully");
-      setLogin(false);
+    } else if (action.meta.requestStatus === "rejected") {
+      toast.error("Login Failed");
     }
-    if (action.meta.requestStatus === "rejected") {
-      // toast.error(action.payload);
-      setLogin(false);
-    }
+    setLogin(false);
   };
 
   return (
-    // <div className="min-h-[90vh] sm:flex items-center">
-    //   <div className="max-w-[800px] mx-auto my-12     lg:px-12 lg:py-[60px]">
-    //     <div className="  space-x-0 sm:space-x-12">
-    //       <div className="w-full  mb-8 sm:mb-0 p-5">
-    //         <h2 className="text-2xl font-bold mb-6">Login</h2>
-    //         <form onSubmit={handleSubmit}>
-    //           <div className=" space-y-4 mb-4">
-    //             {error && (
-    //               <p className="text-red-600 text-sm font-bold">{error}</p>
-    //             )}
-    //             <input
-    //               className="flex h-10 w-full sm:min-w-[400px] rounded-md border px-3 py-2 text-sm focus:outline-none"
-    //               placeholder="Email"
-    //               type="email"
-    //               value={email}
-    //               onChange={(e) => setEmail(e.target.value)}
-    //             />
-    //             <input
-    //               className="flex h-10 w-full sm:min-w-[400px] rounded-md border px-3 py-2 text-sm focus:outline-none"
-    //               placeholder="Password"
-    //               type="password"
-    //               value={password}
-    //               onChange={(e) => setPassword(e.target.value)}
-    //             />
-    //           </div>
-    //           <div className="flex items-center space-x-2 mb-6">
-    //             <input
-    //               type="checkbox"
-    //               role="checkbox"
-    //               aria-checked="false"
-    //               className="peer h-4 w-4 shrink-0 rounded-sm border"
-    //             />
-    //             <label className="text-sm font-medium" htmlFor="keep-signed-in">
-    //               Keep me signed in
-    //             </label>
-    //           </div>
-    //           <button
-    //             type="submit"
-    //             className="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 w-full bg-primary text-white"
-    //             disabled={login}
-    //           >
-    //             {login ? "Logging in..." : "LOG IN"}
-    //           </button>
-    //         </form>
-    //         {/* <p className="text-sm mt-6 flex gap-2">
-    //           Did you{" "}
-    //           <a className="text-blue-600" href="#">
-    //             {" "}
-    //             forget your password?{" "}
-    //           </a>
-    //         </p> */}
-    //       </div>
-    //       {/* <div className="w-full sm:w-1/2">
-    //         <p className="text-sm mb-6">
-    //           If you don&apos;t already have an account click the button below
-    //           to create your account.
-    //         </p>
-    //         <Link href='/register'>
-    //           <span className="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 w-full mb-2 bg-black text-white">
-    //             CREATE ACCOUNT
-    //           </span>
-    //         </Link>
-    //         <p className="text-center my-4">OR</p>
-
-    //         <button className="inline-flex items-center justify-center rounded-md text-sm font-medium gap-2 h-10 px-4 py-2 w-full text-black border">
-    //           <svg
-    //             xmlns="http://www.w3.org/2000/svg"
-    //             width="30"
-    //             height="30"
-    //             viewBox="0 0 48 48"
-    //           >
-    //             <path
-    //               fill="#FFC107"
-    //               d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"
-    //             ></path>
-    //             <path
-    //               fill="#FF3D00"
-    //               d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"
-    //             ></path>
-    //             <path
-    //               fill="#4CAF50"
-    //               d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"
-    //             ></path>
-    //             <path
-    //               fill="#1976D2"
-    //               d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"
-    //             ></path>
-    //           </svg>
-    //           SIGN IN WITH GOOGLE
-    //         </button>
-    //       </div> */}
-    //     </div>
-    //   </div>
-    // </div>
-
-    <div className="bg-gray-100 flex justify-center items-center h-[80vh] mt-1">
-      <div className="max-w-[800px] mx-auto  p-6 bg-white shadow-md sm:px-8 sm:py-10 lg:px-12  my-14 mb-52">
+    <div className="bg-gray-100 mt-32 lg:mt-1 flex justify-center items-center h-[80vh] ">
+      <div className="max-w-[800px] mx-auto p-6 bg-white shadow-md sm:px-8 sm:py-10 lg:px-12 my-14 mb-52">
         <div className="flex flex-col sm:flex-row justify-between space-x-0 sm:space-x-12">
           <div className="w-full sm:w-1/2 mb-8 sm:mb-0">
             {/* Left side form */}
@@ -137,17 +50,24 @@ export default function Login() {
               Welcome to <span className="text-[#f69224]">Shoe</span>
               <span className="text-[#6fd300]">Park</span> Login.
             </h2>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="flex flex-col space-y-4 mb-4">
+                {error && (
+                  <p className="text-red-600 text-sm font-bold">{error}</p>
+                )}
                 <input
                   className="flex h-10 w-full rounded-md border px-3 py-2 text-sm focus:outline-none"
                   placeholder="Email / Phone Number"
                   type="text"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 <input
                   className="flex h-10 w-full rounded-md border px-3 py-2 text-sm focus:outline-none"
                   placeholder="Password"
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
               <div className="flex items-center space-x-2 mb-6">
@@ -157,21 +77,24 @@ export default function Login() {
                   aria-checked="false"
                   data-state="unchecked"
                   value="on"
-                  className="peer h-4 w-4 shrink-0 rounded-sm border  "
+                  className="peer h-4 w-4 shrink-0 rounded-sm border"
                 />
                 <label className="text-sm font-medium" htmlFor="keep-signed-in">
                   Keep me signed in
                 </label>
               </div>
-              <button className="inline-flex items-center justify-center rounded-md text-sm font-medium  h-10 px-4 py-2 w-full hover:bg-[#e4933d]  bg-[#f69224] text-white">
-                SIGN IN
+              <button
+                type="submit"
+                className="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 w-full bg-[#f69224] text-white hover:bg-[#e4933d]"
+                disabled={login}
+              >
+                {login ? "Logging in..." : "SIGN IN"}
               </button>
             </form>
             <p className="text-sm mt-6 flex gap-2">
               Did you{" "}
               <a className="text-blue-600" href="#">
-                {" "}
-                forget your password?{" "}
+                forget your password?
               </a>
             </p>
           </div>
@@ -183,14 +106,14 @@ export default function Login() {
             </p>
             <Link
               href="/sign-up"
-              className="inline-flex items-center justify-center rounded-md text-sm font-medium  h-10 px-4 py-2 w-full mb-2 bg-black text-white"
+              className="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 w-full mb-2 bg-black text-white"
             >
               CREATE ACCOUNT
             </Link>
             <p className="text-center my-9">OR</p>
             <button
               type="button"
-              className="py-2 px-5 w-full mb-4 mt-10  mx-auto block shadow-lg border rounded-md border-black"
+              className="py-2 px-5 w-full mb-4 mt-10 mx-auto block shadow-lg border rounded-md border-black"
             >
               <svg
                 viewBox="-0.5 0 48 48"
@@ -207,7 +130,8 @@ export default function Login() {
                   strokeLinejoin="round"
                 ></g>
                 <g id="SVGRepo_iconCarrier">
-                  <title>Google-color</title> <desc>Created with Sketch.</desc>
+                  <title>Google-color</title>
+                  <desc>Created with Sketch.</desc>
                   <defs></defs>
                   <g
                     id="Icons"
@@ -247,9 +171,12 @@ export default function Login() {
                       </g>
                     </g>
                   </g>
+                  <g strokeWidth="0"></g>
+                  <g strokeLinecap="round"></g>
+                  <g strokeLinejoin="round"></g>
                 </g>
               </svg>
-              Continue with Google
+              <span>Login with Google</span>
             </button>
           </div>
         </div>
@@ -257,3 +184,4 @@ export default function Login() {
     </div>
   );
 }
+

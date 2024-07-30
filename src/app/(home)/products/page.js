@@ -4,9 +4,9 @@ import Card from "@/components/product-card/Card";
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export const metadata = {
-  title: "Products",
-  description: 'Iconic Leather Shoes BD - Your trusted store for premium leather footwear. Discover our exclusive collection of handcrafted leather shoes for men and women. Shop now for high-quality, durable, and stylish leather footwear. Explore a variety of designs including formal shoes, casual loafers, and trendy boots. Perfect for any occasion. Enjoy free shipping, easy returns, and exceptional customer service. Experience the best in leather craftsmanship at Iconic Leather Shoes BD'
+  title:"Products", 
 };
+
 
 export default async function Products() {
   const products = await fetch(`${backendUrl}/api/data/products`, { cache: 'no-store' });

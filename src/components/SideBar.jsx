@@ -1,11 +1,57 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { logout } from "@/redux/features/auth/authSlice";
-import toast from "react-hot-toast";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { CSSTransition } from "react-transition-group";
+import "./sidebar.css"; // Import the CSS for transitions
+
+// Define SVG icons as separate components
+const Icon = ({ children }) => (
+  <svg
+    className="h-5 w-5 mr-2 inline-block"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    {children}
+  </svg>
+);
+
+const HomeIcon = (
+  <Icon>
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M3 12l2-2m0 0l7-7 7 7m-9 9v-4a2 2 0 012-2h4a2 2 0 012 2v4m-6 0h6"
+    />
+  </Icon>
+);
+
+const DownArrowIcon = (
+  <Icon>
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M19 9l-7 7-7-7"
+    />
+  </Icon>
+);
+
+const RightArrowIcon = (
+  <Icon>
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M9 5l7 7-7 7"
+    />
+  </Icon>
+);
 
 export default function SideBar({
   mobileMenuOpen,
@@ -17,291 +63,300 @@ export default function SideBar({
   const dispatch = useDispatch();
   const pathname = usePathname();
   const router = useRouter();
+  const [showCategorySubmenu, setShowCategorySubmenu] = useState(false);
+  const [showProductSubmenu, setShowProductSubmenu] = useState(false);
 
-  const signOutHandler = async () => {
-    dispatch(logout());
-    toast.success("Logout Successfully");
-
-    // Redirect to login page after logout
-    router.push("/login");       
-  };
-
-  const homeIcon = (
-    <svg
-      className="h-5 w-5 mr-2 inline-block"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M3 12l2-2m0 0l7-7 7 7m-9 9v-4a2 2 0 012-2h4a2 2 0 012 2v4m-6 0h6"
-      />
-    </svg>
-  );
-
-  const bannerIcon = (
-    <svg
-      className="h-5 w-5 mr-2 inline-block"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
-  );
-
-  const productIcon = (
-    <svg
-      className="h-5 w-5 mr-2 inline-block"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M12 4v16m8-8H4"
-      />
-    </svg>
-  );
-
-  const manageIcon = (
-    <svg
-      className="h-5 w-5 mr-2 inline-block"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M5 13l4 4L19 7"
-      />
-    </svg>
-  );
-
-  const ordersIcon = (
-    <svg
-      className="h-5 w-5 mr-2 inline-block"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M12 8v4l3 3m-9 5a9 9 0 1118 0 9 9 0 01-18 0z"
-      />
-    </svg>
-  );
-
-  const logoutIcon = (
-    <svg
-      className="h-5 w-5 mr-2 inline-block"
-      fill="none"
-      stroke="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth={2}
-        d="M17 16l4-4m0 0l-4-4m4 4H7m6-4v8"
-      />
-    </svg>
-  );
+  const menuItems = [{ href: "/dashboard", icon: HomeIcon, label: "Home" }];
 
   return (
-
-    <>
-    {
-      userInfo?.role === 'admin' ? <ul className="max-w-xs w-full space-y-3 relative">
-      <Link
-        onClick={() => setMobileMenuOpen(false)}
-        href="/dashboard"
-        className="w-full"
-      >
-        <li
-          className={`h-fit rounded-md px-3 py-2 mb-3 ${
-            pathname === "/dashboard" ? "bg-primary" : "bg-[#1f2d3b]"
-          } text-white `}
-        >
-          {homeIcon}
-          Home
-        </li>
-      </Link>
-      <Link
-        onClick={() => setMobileMenuOpen(false)}
-        href="/dashboard/add-banner"
-        className="w-full"
-      >
-        <li
-          className={`h-fit rounded-md px-3 py-2 mb-3 ${
-            pathname === "/dashboard/add-banner"
-              ? "bg-primary"
-              : "hover:bg-primary"
-          } transition delay-200 text-white `}
-        >
-          {bannerIcon}
-          Manage Banners
-        </li>
-      </Link>
-      <Link
-        onClick={() => setMobileMenuOpen(false)}
-        href="/dashboard/add-product"
-        className="w-full"
-      >
-        <li
-          className={`h-fit rounded-md px-3 py-2 mb-3 ${
-            pathname === "/dashboard/add-product"
-              ? "bg-primary"
-              : "hover:bg-primary"
-          } transition delay-200 text-white `}
-        >
-          {productIcon}
-          Add Product
-        </li>
-      </Link>
-      <Link
-        onClick={() => setMobileMenuOpen(false)}
-        href="/dashboard/products-management"
-        className="w-full"
-      >
-        <li
-          className={`h-fit rounded-md px-3 py-2 mb-3 ${
-            pathname === "/dashboard/products-management"
-              ? "bg-primary  text-white"
-              : "hover:bg-primary text-white"
-          } `}
-        >
-          {manageIcon}
-          Products Management
-        </li>
-      </Link>
-      <Link
-        onClick={() => setMobileMenuOpen(false)}
-        href="/dashboard/orders-management"
-        className="w-full "
-      >
-        <li
-          className={`h-fit border mb-5 border-primary rounded-md px-3 py-2 relative  ${
-            pathname === "/dashboard/orders-management"
-              ? "bg-primary text-white"
-              : "hover:bg-primary text-white"
-          } `}
-        >
-          {ordersIcon}
-          Orders Management
-          <span className="absolute -right-2 -top-2 flex h-[24px] w-[24px] items-center justify-center rounded-full bg-red-500 text-center text-[12px] text-white ">
-            {
-              data?.orders.filter((item) => item.status === "Processing")
-                ?.length
-            }
-          </span>
-        </li>
-      </Link>
-
-      <li className="h-fit rounded-md px-3 py-4 mb-3 border mt-5 flex justify-between items-center text-white ">
-        <Link
-          onClick={() => setMobileMenuOpen(false)}
-          href="/dashboard/profile"
-        >
-          <h1>
-            <p className="underline cursor-pointer">{userInfo?.name}</p>
-            <span className="text-xs">({userInfo?.role})</span>
-          </h1>
-        </Link>
-        <img src={userInfo?.image} className="w-12 h-12 rounded-full border" />
-      </li>
-
-      <li
-        onClick={signOutHandler}
-        className="w-full h-fit rounded-md cursor-pointer px-3 py-2 mb-3 bg-rose-600 text-white "
-      >
-        {logoutIcon}
-        Logout
-      </li>
-    </ul> : 
-    
     <ul className="max-w-xs w-full space-y-3 relative">
-      <Link
-        onClick={() => setMobileMenuOpen(false)}
-        href="/dashboard"
-        className="w-full"
-      >
-        <li
-          className={`h-fit rounded-md px-3 py-2 mb-3 ${
-            pathname === "/dashboard" ? "bg-primary" : "bg-[#1f2d3b]"
-          } text-white `}
-        >
-          {homeIcon}
-          Home
-        </li>
-      </Link>
-     
-      <Link
-        onClick={() => setMobileMenuOpen(false)}
-        href="/dashboard/orders-management"
-        className="w-full "
-      >
-        <li
-          className={`h-fit border mb-5 border-primary rounded-md px-3 py-2 relative  ${
-            pathname === "/dashboard/orders-management"
-              ? "bg-primary text-white"
-              : "hover:bg-primary text-white"
-          } `}
-        >
-          {ordersIcon}
-          Orders Management
-          <span className="absolute -right-2 -top-2 flex h-[24px] w-[24px] items-center justify-center rounded-full bg-red-500 text-center text-[12px] text-white ">
-            {
-              data?.orders.filter((item) => item.status === "Processing")
-                ?.length
-            }
-          </span>
-        </li>
-      </Link>
-
-      <li className="h-fit rounded-md px-3 py-4 mb-3 border mt-5 flex justify-between items-center text-white ">
+      {menuItems.map((item, index) => (
         <Link
+          key={index}
           onClick={() => setMobileMenuOpen(false)}
-          href="/dashboard/profile"
+          href={item.href}
+          className="w-full"
         >
-          <h1>
-            <p className="underline cursor-pointer">{userInfo?.name}</p>
-            <span className="text-xs">({userInfo?.role})</span>
-          </h1>
+          <li
+            className={`h-fit rounded-md px-3 py-2 mb-2 ${
+              pathname === item.href
+                ? "bg-primary text-white"
+                : "hover:bg-primary text-white"
+            } transition delay-200`}
+          >
+            {item.icon}
+            {item.label}
+          </li>
         </Link>
-        <img src={userInfo?.image} className="w-12 h-12 rounded-full border" />
-      </li>
+      ))}
+      {userInfo?.role === "admin" && (
+        <>
+          <li
+            onClick={() => setShowProductSubmenu(!showProductSubmenu)}
+            className={`h-fit rounded-md px-3 py-2 mb-5 cursor-pointer  transition delay-200 text-white flex justify-between items-center`}
+          >
+            <p className="flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"
+                />
+              </svg>
+              Products
+            </p>
+            {showProductSubmenu ? DownArrowIcon : RightArrowIcon}
+          </li>
+          <CSSTransition
+            in={showProductSubmenu}
+            timeout={300}
+            classNames="submenu"
+            unmountOnExit
+          >
+            <ul className="pl-6 text-sm">
+              <Link
+                onClick={() => setMobileMenuOpen(false)}
+                href="/dashboard/add-product"
+                className="w-full"
+              >
+                <li
+                  className={`h-fit rounded-md px-3 py-2 mb-2 ${
+                    pathname === "/dashboard/add-product"
+                      ? "bg-primary"
+                      : "hover:bg-primary"
+                  } transition delay-200 text-white`}
+                >
+                  {/* {ProductIcon} */}
+                  Add Products
+                </li>
+              </Link>
+              <Link
+                onClick={() => setMobileMenuOpen(false)}
+                href="/dashboard/products-management"
+                className="w-full"
+              >
+                <li
+                  className={`h-fit rounded-md px-3 py-2 mb-2 ${
+                    pathname === "/dashboard/products-management"
+                      ? "bg-primary"
+                      : "hover:bg-primary"
+                  } transition delay-200 text-white`}
+                >
+                  {/* {OrderIcon} */}
+                  All Products
+                </li>
+              </Link>
+            </ul>
+          </CSSTransition>
 
-      <li
-        onClick={signOutHandler}
-        className="w-full h-fit rounded-md cursor-pointer px-3 py-2 mb-3 bg-rose-600 text-white "
-      >
-        {logoutIcon}
-        Logout
-      </li>
+          <li
+            onClick={() => setShowCategorySubmenu(!showCategorySubmenu)}
+            className={`h-fit rounded-md px-3 py-2 mb-5 cursor-pointer  transition delay-200 text-white flex justify-between items-center`}
+          >
+            {/* {CategoryIcon} */}
+            <p className="flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"
+                />
+              </svg>
+              Manage Categories
+            </p>
+
+            {showCategorySubmenu ? DownArrowIcon : RightArrowIcon}
+          </li>
+          <CSSTransition
+            in={showCategorySubmenu}
+            timeout={300}
+            classNames="submenu"
+            unmountOnExit
+          >
+            <ul className="pl-6 text-sm">
+              <Link
+                onClick={() => setMobileMenuOpen(false)}
+                href="/dashboard/categories-add-category"
+                className="w-full"
+              >
+                <li
+                  className={`h-fit rounded-md px-3 py-2 mb-2 ${
+                    pathname === "/dashboard/categories-add-category"
+                      ? "bg-primary"
+                      : "hover:bg-primary"
+                  } transition delay-200 text-white`}
+                >
+                  {/* {CategoryIcon} */}
+                  Category
+                </li>
+              </Link>
+              <Link
+                onClick={() => setMobileMenuOpen(false)}
+                href="/dashboard/categories-sub-category"
+                className="w-full"
+              >
+                <li
+                  className={`h-fit rounded-md px-3 py-2 mb-2 ${
+                    pathname === "/dashboard/categories-sub-category"
+                      ? "bg-primary"
+                      : "hover:bg-primary"
+                  } transition delay-200 text-white`}
+                >
+                  {/* {SubCategoryIcon} */}
+                  Sub Category
+                </li>
+              </Link>
+              <Link
+                onClick={() => setMobileMenuOpen(false)}
+                href="/dashboard/categories-child-category"
+                className="w-full"
+              >
+                <li
+                  className={`h-fit rounded-md px-3 py-2 mb-2 ${
+                    pathname === "/dashboard/categories-child-category"
+                      ? "bg-primary"
+                      : "hover:bg-primary"
+                  } transition delay-200 text-white`}
+                >
+                  {/* {ChildCategoryIcon} */}
+                  Child Category
+                </li>
+              </Link>
+            </ul>
+          </CSSTransition>
+
+          <Link
+            onClick={() => setMobileMenuOpen(false)}
+            href="/dashboard/orders-management"
+            className="w-full "
+          >
+            <li
+              className={`h-fit rounded-md flex items-center gap-2 px-3 py-2 my-3 ${
+                pathname === "/dashboard/orders-management"
+                  ? "bg-primary"
+                  : "hover:bg-primary"
+              } transition delay-200 text-white `}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 0 0-3.7-3.7 48.678 48.678 0 0 0-7.324 0 4.006 4.006 0 0 0-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 0 0 3.7 3.7 48.656 48.656 0 0 0 7.324 0 4.006 4.006 0 0 0 3.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3-3 3"
+                />
+              </svg>
+              Manage Orders
+            </li>
+          </Link>
+          <Link
+            onClick={() => setMobileMenuOpen(false)}
+            href="/dashboard/add-banner"
+            className="w-full"
+          >
+            <li
+              className={`h-fit rounded-md flex gap-2 items-center px-3 py-2 mb-2 ${
+                pathname === "/dashboard/add-banner"
+                  ? "bg-primary"
+                  : "hover:bg-primary"
+              } transition delay-200 text-white`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+                />
+              </svg>
+              Manage Banners
+            </li>
+          </Link>
+          <Link
+            onClick={() => setMobileMenuOpen(false)}
+            href="/dashboard/flash-sale"
+            className="w-full"
+          >
+            <li
+              className={`h-fit rounded-md flex gap-2 items-center px-3 py-2 mb-2 ${
+                pathname === "/dashboard/flash-sale"
+                  ? "bg-primary"
+                  : "hover:bg-primary"
+              } transition delay-200 text-white`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"
+                />
+              </svg>
+              Flash Sale Option
+            </li>
+          </Link>
+          <Link
+            onClick={() => setMobileMenuOpen(false)}
+            href="/dashboard/reviews-management"
+            className="w-full"
+          >
+            <li
+              className={`h-fit rounded-md flex items-center gap-2 px-3 py-2 mb-2 ${
+                pathname === "/dashboard/reviews-management"
+                  ? "bg-primary"
+                  : "hover:bg-primary"
+              } transition delay-200 text-white`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
+                />
+              </svg>
+              Review Manage Option 
+            </li>
+          </Link>
+        </>
+      )}
     </ul>
-    }
-    </>
-   
   );
 }

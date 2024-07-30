@@ -54,9 +54,20 @@ const ProductList = () => {
   const displayedProducts = products.slice(startIndex, startIndex + productsPerPage);
 
   return (
-    <div className="container mx-auto p-4 flex">
-      <aside className="w-1/4 pr-4">
-        <div className="mb-6">
+    <div className="container mx-auto p-4 flex flex-col md:flex-row">
+      <aside className="w-full md:w-1/4 pr-4 mb-4 md:mb-0">
+        {/* Categories */}
+        <div className="mb-6 md:hidden">
+          <h3 className="text-lg font-bold mb-4">Categories</h3>
+          <ul className="flex flex-wrap items-start gap-3 overflow-x-auto">
+            {categories.map((category, index) => (
+              <li key={index} className="text-white shadow px-2 py-1 bg-secondary hover:text-gray-900 cursor-pointer whitespace-nowrap">
+                {category}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="hidden md:block">
           <h3 className="text-lg font-bold mb-4">Categories</h3>
           <ul className="space-y-2">
             {categories.map((category, index) => (
@@ -66,7 +77,18 @@ const ProductList = () => {
             ))}
           </ul>
         </div>
-        <div>
+        {/* Filters */}
+        <div className="md:hidden">
+          <h3 className="text-lg font-bold mb-4">Filters</h3>
+          <select className="border rounded py-2 px-4 w-full">
+            {filters.map((filter, index) => (
+              <option key={index} className={filter.className}>
+                {filter.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="hidden md:block">
           <h3 className="text-lg font-bold mb-4">Filters</h3>
           <ul className="space-y-2">
             {filters.map((filter, index) => (
@@ -77,11 +99,11 @@ const ProductList = () => {
           </ul>
         </div>
       </aside>
-      <div className="w-3/4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">57,737 items found for "Traditional Clothing"</h2>
-          <div className="flex items-center">
-            <button className="border rounded py-2 px-4 mr-2">Show 7.7 products only</button>
+      <div className="w-full md:w-3/4">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-4">
+          {/* <h2 className="text-xl font-bold mb-4 sm:mb-0">57,737 items found for "Traditional Clothing"</h2> */}
+          <div className="flex justify-between items-center">
+            <button className="border rounded py-2 px-4 mr-2">Show 7.7 only</button>
             <select className="border rounded py-2 px-4">
               <option>Best Match</option>
               <option>Best Match</option>

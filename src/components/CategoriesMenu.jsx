@@ -1,100 +1,194 @@
-'use client';
+"use client";
 
-import { useState, useRef } from "react";
+import { useState, useEffect } from "react";
+import axiosInstance from "@/utils/axiosInstance";
+import Link from "next/link";
 
 export default function CategoriesMenu() {
-  const [activeSubMenu, setActiveSubMenu] = useState(null);
-  const [activeChildMenu, setActiveChildMenu] = useState(null);
-  const timeoutRef = useRef(null);
+  const [activeCategory, setActiveCategory] = useState(null);
+  const [activeSubcategory, setActiveSubcategory] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
+  const [childCategories, setChildCategories] = useState({});
+  const [popularCategories, setPopularCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const handleMouseEnter = (menu) => {
-    clearTimeout(timeoutRef.current);
-    setActiveSubMenu(menu);
+  useEffect(() => {
+    getAllParentCategories();
+  }, []);
+
+  const getAllParentCategories = async () => {
+    try {
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/data/categories`
+      );
+      setCategories(response.data?.data || []);
+    } catch (error) {
+      console.error("Error fetching parent categories:", error);
+    }
   };
 
-  const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => {
-      setActiveSubMenu(null);
-      setActiveChildMenu(null);
-    }, 300); // Adjust delay time as needed
+  const getSubCategories = async (parentId) => {
+    setLoading(true);
+    try {
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/data/sub-by-parentId/${parentId}`
+      );
+      setSubcategories(response.data?.data || []);
+    } catch (error) {
+      console.error("Error fetching subcategories:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleChildMouseEnter = (menu) => {
-    clearTimeout(timeoutRef.current);
-    setActiveChildMenu(menu);
+  const getChildCategories = async (subcategoryId) => {
+    setLoading(true);
+    try {
+      const response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/data/child-by-subcategoryId/${subcategoryId}`
+      );
+      setChildCategories((prev) => ({
+        ...prev,
+        [subcategoryId]: response.data?.data || [],
+      }));
+    } catch (error) {
+      console.error("Error fetching child categories:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleCategory = async (categoryId) => {
+    if (activeCategory === categoryId) {
+      setActiveCategory(null);
+      setSubcategories([]);
+      setChildCategories({});
+    } else {
+      setActiveCategory(categoryId);
+      await getSubCategories(categoryId);
+    }
+  };
+
+  const toggleSubcategory = async (subcategoryId) => {
+    if (activeSubcategory === subcategoryId) {
+      setActiveSubcategory(null);
+      setChildCategories((prev) => ({
+        ...prev,
+        [subcategoryId]: [],
+      }));
+    } else {
+      setActiveSubcategory(subcategoryId);
+      await getChildCategories(subcategoryId);
+    }
   };
 
   return (
-    <div className="h-[400px] px-5 pt-4 relative">
-      <ul>
-        {[
-          { name: 'Loafer Shoes', submenu: ['Premium Loafer', 'Regular Loafer', 'Half Loafer'] },
-          { name: 'Party Shoes', submenu: ['Tassel Shoes', 'Half Tassel Shoes'] },
-          { name: 'Formal Shoes', submenu: ['Oxford Shoes', 'Derby Shoes'] },
-          { name: 'Boots', submenu: ['Biker Boots', 'Chelsea Boots', 'Casual Boots'] },
-          { name: 'Casual Shoes', submenu: ['Premium Casuals', 'Regular Casuals'] },
-          { name: 'Sandals', submenu: ['Sandals', 'Slides'] },
-          { name: 'Bags', submenu: ['Wallet', 'Bags'] },
-          { name: 'Accessories', submenu: ['Shoes Care', 'Socks', 'Key Ring', 'Insoles'], childSubmenu: ['Shoes Shiner', 'Shoes Color', 'Shoes Brush', 'Shoes Horn'] }
-        ].map((category, index) => (
-          <li
-            key={index}
-            onMouseEnter={() => handleMouseEnter(category.name)}
-            onMouseLeave={handleMouseLeave}
-            className="relative"
-          >
-            <button className=" text-gray-800 py-2 px-4 border-b hover:bg-primary hover:text-white w-full text-left flex justify-between items-center group">
-              {category.name}
-              <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+    <>
+      <div className="bg-secondary shadow px-4 py-2 rounded-t-lg">
+        <h2 className="text-md font-semibold text-white ">All Categories</h2>
+      </div>
+      <div className="w-full max-w-md rounded-b-lg bg-white p-4">
+        {categories.map((cat) => (
+          <div key={cat._id} className="border-b border-gray-300">
+            <button
+              onClick={() => toggleCategory(cat._id)}
+              className="flex items-center justify-between w-full p-2 text-sm font-medium text-gray-800 hover:bg-gray-100 rounded-md"
+            >
+              <span>{cat.name}</span>
+              <span>
                 <svg
-                  className="w-4 h-4 fill-current"
+                  className={`h-4 w-4 transform transition-transform duration-300 ${
+                    activeCategory === cat._id ? "rotate-180" : ""
+                  }`}
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                 >
-                  <path d="M10 2L8.59 3.41 14.17 9H2v2h12.17l-5.58 5.59L10 18l8-8-8-8z" />
+                  <path d="M5 10l5 5 5-5H5z" />
                 </svg>
               </span>
             </button>
-            {activeSubMenu === category.name && (
-              <div className="absolute top-0 left-full w-48 bg-white border rounded-lg py-2 z-20">
-                <ul>
-                  {category.submenu.map((item, subIndex) => (
-                    <li key={subIndex} onMouseEnter={() => category.name === 'Accessories' && handleChildMouseEnter(item)}>
-                      <button className=" text-gray-800 py-2 px-4 border-b hover:bg-primary hover:text-white w-full text-left flex justify-between items-center">
-                        {item}
-                        {category.name === 'Accessories' && subIndex === 0 && (
-                          <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div
+              className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                activeCategory === cat._id
+                  ? "max-h-96 opacity-100"
+                  : "max-h-0 opacity-0"
+              }`}
+            >
+              <ul className="pl-4">
+                {subcategories.map((subcat) => (
+                  <li key={subcat._id} className="border-b border-gray-300">
+                    {subcat.hasChildCategories ? (
+                      <>
+                        <button
+                          onClick={() => toggleSubcategory(subcat._id)}
+                          className="flex items-center justify-between w-full p-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
+                        >
+                          <span>{subcat.name}</span>
+                          <span>
                             <svg
-                              className="w-4 h-4 fill-current"
+                              className={`h-4 w-4 transform transition-transform duration-300 ${
+                                activeSubcategory === subcat._id
+                                  ? "rotate-90"
+                                  : ""
+                              }`}
                               xmlns="http://www.w3.org/2000/svg"
                               viewBox="0 0 20 20"
                             >
-                              <path d="M10 2L8.59 3.41 14.17 9H2v2h12.17l-5.58 5.59L10 18l8-8-8-8z" />
+                              <path d="M5 10l5 5 5-5H5z" />
                             </svg>
                           </span>
-                        )}
-                      </button>
-                      {activeChildMenu === item && category.name === 'Accessories' && (
-                        <div className="absolute top-0 left-full w-48 bg-white border rounded-lg shadow-lg py-2 z-20">
-                          <ul>
-                            {category.childSubmenu.map((childItem, childIndex) => (
-                              <li key={childIndex}>
-                                <button className="block text-gray-800 py-2 px-4 border-b hover:bg-primary hover:text-white w-full text-left">
-                                  {childItem}
-                                </button>
+                        </button>
+                        <div
+                          className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                            activeSubcategory === subcat._id
+                              ? "max-h-96 opacity-100"
+                              : "max-h-0 opacity-0"
+                          }`}
+                        >
+                          <ul className="pl-4">
+                            {childCategories[subcat._id]?.map((childCat) => (
+                              <li
+                                key={childCat._id}
+                                className="py-1 text-sm text-gray-600"
+                              >
+                                {childCat.hasChildCategories ? (
+                                  <button
+                                    onClick={() =>
+                                      toggleSubcategory(childCat._id)
+                                    }
+                                    className="w-full text-left"
+                                  >
+                                    {childCat.name}
+                                  </button>
+                                ) : (
+                                  <Link
+                                    href={`/categories/${childCat.slug}`}
+                                    className="hover:text-blue-500"
+                                  >
+                                    {childCat.name}
+                                  </Link>
+                                )}
                               </li>
                             ))}
                           </ul>
                         </div>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </li>
+                      </>
+                    ) : (
+                      <Link
+                        href={`/categories/${subcat.slug}`}
+                        className="block w-full p-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
+                      >
+                        {subcat.name}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         ))}
-      </ul>
-    </div>
+      </div>
+    </>
   );
 }
