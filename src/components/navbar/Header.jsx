@@ -132,7 +132,10 @@ const Header = () => {
                     } rounded-full bg-primary transition-all duration-300 group-hover:w-full`}
                   ></span>
                 </li>
-                <li  className="group flex cursor-pointer flex-col"  onClick={() => setMenuOpen(false)}>
+                <li
+                  className="group flex cursor-pointer flex-col"
+                  onClick={() => setMenuOpen(false)}
+                >
                   <Link href="/register" scroll={false}>
                     Sign up
                   </Link>
@@ -154,7 +157,7 @@ const Header = () => {
                 </li>
                 <li className="group flex cursor-pointer flex-col">
                   <Link href="/register" scroll={false}>
-                   Logout
+                    Logout
                   </Link>
                   <span
                     className={`mt-[2px] h-[3px] w-[0px] ${
@@ -329,11 +332,21 @@ const Header = () => {
               </div>
             </div>
           </div>
-          {/* <marquee className="text-red-600 font-bold">
-      প্রিয় ব্যবহারকারী, আমাদের ওয়েবসাইটটি আপডেটের কাজ চলছে। সাময়িক
-      অসুবিধার জন্য আমরা দুঃখিত। আপনার ধৈর্যের জন্য ধন্যবাদ। শীঘ্রই আবার
-      দেখা হবে
-    </marquee> */}
+          <div className=" overflow-hidden bg-red-600 text-white font-bold py-2">
+            <div className=" whitespace-nowrap animate-marquee">
+              <span>
+                আমাদের ওয়েবসাইটটি আপডেটের কাজ চলছে। সাময়িক অসুবিধার জন্য আমরা
+                দুঃখিত। আপনারা আমাদের সাথে  ***01754493353 ***               <a
+                  href="https://wa.me/01754493353"
+                  className="text-yellow-300 underline ml-2"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  WhatsApp এ যোগাযোগ করতে পারেন ।
+                </a>
+              </span>
+            </div>
+          </div>
         </Container>
       </section>
     </>
