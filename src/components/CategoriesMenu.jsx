@@ -117,18 +117,18 @@ export default function CategoriesMenu() {
             >
               <ul className="pl-4">
                 {subcategories.map((subcat) => (
-                  <li key={subcat._id} className="border-b border-gray-300">
-                    {subcat.hasChildCategories ? (
+                  <li key={subcat?._id} className="border-b border-gray-300">
+                    {subcat?.hasChildCategories ? (
                       <>
                         <button
-                          onClick={() => toggleSubcategory(subcat._id)}
+                          onClick={() => toggleSubcategory(subcat?._id)}
                           className="flex items-center justify-between w-full p-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
                         >
-                          <span>{subcat.name}</span>
+                          <span>{subcat?.name}</span>
                           <span>
                             <svg
                               className={`h-4 w-4 transform transition-transform duration-300 ${
-                                activeSubcategory === subcat._id
+                                activeSubcategory === subcat?._id
                                   ? "rotate-90"
                                   : ""
                               }`}
@@ -141,7 +141,7 @@ export default function CategoriesMenu() {
                         </button>
                         <div
                           className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                            activeSubcategory === subcat._id
+                            activeSubcategory === subcat?._id
                               ? "max-h-96 opacity-100"
                               : "max-h-0 opacity-0"
                           }`}
@@ -149,24 +149,24 @@ export default function CategoriesMenu() {
                           <ul className="pl-4">
                             {childCategories[subcat._id]?.map((childCat) => (
                               <li
-                                key={childCat._id}
+                                key={childCat?._id}
                                 className="py-1 text-sm text-gray-600"
                               >
-                                {childCat.hasChildCategories ? (
+                                {childCat?.hasChildCategories ? (
                                   <button
                                     onClick={() =>
-                                      toggleSubcategory(childCat._id)
+                                      toggleSubcategory(childCat?._id)
                                     }
                                     className="w-full text-left"
                                   >
-                                    {childCat.name}
+                                    {childCat?.name}
                                   </button>
                                 ) : (
                                   <Link
-                                    href={`/categories/${childCat.slug}`}
+                                    href={`/categories/slug?slug=${childCat?.slug}&&_id=${childCat?._id}`}
                                     className="hover:text-blue-500"
                                   >
-                                    {childCat.name}
+                                    {childCat?.name}
                                   </Link>
                                 )}
                               </li>
@@ -176,10 +176,10 @@ export default function CategoriesMenu() {
                       </>
                     ) : (
                       <Link
-                        href={`/categories/${subcat.slug}`}
+                      href={`/categories/slug?slug=${subcat?.slug}&_id=${subcat?._id}`}
                         className="block w-full p-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
                       >
-                        {subcat.name}
+                        {subcat?.name}
                       </Link>
                     )}
                   </li>

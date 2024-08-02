@@ -44,7 +44,7 @@ export default async function Home({ searchParams }) {
           <Categories />
           <section
             className="mb-10"
-            data-aos="fade-right"
+            data-aos="fade-up"
             data-aos-offset="300"
             data-aos-easing="ease-in-sine"
           >
@@ -68,7 +68,7 @@ export default async function Home({ searchParams }) {
       <Container>
       <div
         className="mb-8 p-2"
-        data-aos="fade-left"
+        data-aos="fade-up"
         data-aos-offset="300"
         data-aos-easing="ease-in-sine"
       >

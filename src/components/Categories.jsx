@@ -33,7 +33,7 @@ const Categories = () => {
   return (
     <div className=" py-6" data-aos="zoom-in-up">
       <h2 className="text-xl font-bold mb-6">Categories</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols- gap-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-8">
         {categories.map((category, index) => (
           <CategoryCard key={index} category={category} />
         ))}

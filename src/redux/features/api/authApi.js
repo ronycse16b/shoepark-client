@@ -2,7 +2,6 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-
 export const authApi = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({
@@ -16,7 +15,6 @@ export const authApi = createApi({
   }),
   tagTypes: ["product", "User"],
   endpoints: (build) => ({
-
     userProfile: build.query({
       query: () => ({
         url: "api/auth/profile",
@@ -29,17 +27,27 @@ export const authApi = createApi({
         method: "GET",
       }),
     }),
-   
+    getAllOrdersByUser: build.query({
+      query: (userId) => ({
+        url: `api/data/cart?userId=${userId}`,
+        method: "GET",
+      }),
+    }),
+    getAllOrders: build.query({
+      query: () => ({
+        url: "api/data/orders",
+        method: "GET",
+      }),
+    }),
 
-   AddProductData: build.mutation({
-  query: ({formData}) => ({
-    url:`/api/data/add-product`,
-    method: "POST",
-    body:formData,
-  }),
-  invalidatesTags: ["product"], // Adjust if needed
-}),
-
+    AddProductData: build.mutation({
+      query: ({ formData }) => ({
+        url: `/api/data/add-product`,
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: ["product"], // Adjust if needed
+    }),
   }),
 });
 
@@ -47,5 +55,6 @@ export const authApi = createApi({
 export const {
   useUserProfileQuery,
   useAddProductDataMutation,
-  useGetAllOrdersQuery
+  useGetAllOrdersQuery,
+  useGetAllOrdersByUserQuery,
 } = authApi;

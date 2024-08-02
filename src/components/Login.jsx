@@ -6,38 +6,42 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [login, setLogin] = useState(false);
 
-  const { userInfo,error,loading } = useAppSelector((state) => state.auth);
-  
-  const dispatch = useAppDispatch();
+  const { userInfo, error, loading } = useAppSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLogin(true);
-    const action = await dispatch(userLogin({ email, password }));
-    if (action.meta.requestStatus === "fulfilled") {
 
+    try {
+      const action = await dispatch(userLogin({ email, password }));
 
-      // Check if user is admin or not
-
-
-      if(action?.payload?.role === "admin"){
-        router.push("/dashboard");
+      if (action.meta.requestStatus === 'fulfilled') {
         toast.success("Login Successfully");
-        return;
+
+        // Extract redirect path from query or default based on role
+        const query = new URLSearchParams(window.location.search);
+        const redirectPath = query.get('redirect') || (action.payload.role === 'admin' ? '/dashboard' : '/');
+
+        // Redirect user
+        router.push(redirectPath);
+      } else {
+        toast.error("Login Failed");
       }
-      router.push("/");
-      toast.success("Login Successfully");
-    } else if (action.meta.requestStatus === "rejected") {
-      toast.error("Login Failed");
+    } catch (error) {
+      toast.error("An unexpected error occurred");
+    } finally {
+      setLogin(false);
     }
-    setLogin(false);
   };
 
   return (
@@ -105,7 +109,7 @@ export default function Login() {
               to create your account.
             </p>
             <Link
-              href="/sign-up"
+              href="/register"
               className="inline-flex items-center justify-center rounded-md text-sm font-medium h-10 px-4 py-2 w-full mb-2 bg-black text-white"
             >
               CREATE ACCOUNT
@@ -184,4 +188,3 @@ export default function Login() {
     </div>
   );
 }
-

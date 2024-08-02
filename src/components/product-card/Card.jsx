@@ -13,9 +13,11 @@ const Card = ({ product }) => {
   };
 
   const discountPercentage = calculateDiscountPercentage(
-    product?.salePrice,
-    product?.discount
+    product?.sizes?.[0]?.price,
+    product?.sizes?.[0]?.discount
   );
+
+  // console.log(product)
 
   return (
     <section className="w-[175px] sm:w-[300px] md:w-[300px] bg-white mx-auto space-y-4 rounded-md text-black border border-white shadow-md dark:bg-[#18181B] transition-transform transform hover:scale-105 hover:shadow-lg">
@@ -67,20 +69,20 @@ const Card = ({ product }) => {
         </div>
         <div className="lg:mt-3 flex flex-col md:flex-row items-center justify-between">
           <div className="space-x-2">
-            {product?.salePrice && (
+            {product?.sizes?.[0]?.price && (
               <span className="text-[#66cc00] line-through text-xs font-semibold lg:text-[14px] dark:text-white/60">
-                ৳ {product?.salePrice}
+                ৳ {product?.sizes?.[0]?.price}
               </span>
             )}
             <span className="text-primary text-xs font-semibold lg:text-[14px] dark:text-white/60">
-              ৳ {product?.discount}
+              ৳ {product?.sizes?.[0]?.discount}
             </span>
           </div>
           <Link
             href={`/products/${product?.slug}`}
             className="rounded-lg bg-primary px-3 mb-3 shadow-md py-1 text-xs sm:text-sm md:text-base font-semibold text-white hover:bg-opacity-85"
           >
-            BUY NOW
+            Add To Cart
           </Link>
         </div>
       </div>

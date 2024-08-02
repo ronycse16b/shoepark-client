@@ -10,6 +10,9 @@ import { useSelector } from "react-redux";
 
 export default function AddProduct() {
   const { userInfo } = useSelector((state) => state.auth);
+  if (userInfo?.role !== "admin") {
+    redirect("/dashboard");
+  }
 
   const sizes = [39, 40, 41, 42, 43, 44];
   const [selectedSizes, setSelectedSizes] = useState([]);
@@ -166,9 +169,7 @@ export default function AddProduct() {
     );
   };
 
-  if (userInfo?.role !== "admin") {
-    redirect("/dashboard");
-  }
+
 
   const [formData, setFormData] = useState({
     productName: "",

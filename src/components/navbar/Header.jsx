@@ -1,18 +1,19 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
+import { useGetAllOrdersByUserQuery, useUserProfileQuery } from "@/redux/features/api/authApi";
 import {
-  setCredentialsStarted,
+  logout,
   setCredentialsCompleted,
+  setCredentialsStarted,
   toggleLoading,
 } from "@/redux/features/auth/authSlice";
-import { useUserProfileQuery } from "@/redux/features/api/authApi";
-import Container from "../Container";
-import Image from "next/image";
-import Top from "./Top";
-import Link from "next/link";
 import { useAppSelector } from "@/redux/hooks";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import Container from "../Container";
+import Top from "./Top";
 // Ensure you have this component
 
 const Header = () => {
@@ -24,6 +25,7 @@ const Header = () => {
   };
 
   // profile
+
   const dropDownRef = useRef(null);
   const items = ["Profile", "Dashboard", "Settings", "Log Out"];
 
@@ -45,6 +47,10 @@ const Header = () => {
   const [token, setToken] = useState(null);
   const dispatch = useDispatch();
   const { data, isFetching } = useUserProfileQuery();
+  const userId = userInfo?._id || userInfo?.id;
+  const { data: cartItems = [], error, isLoading } = useGetAllOrdersByUserQuery(userId);
+
+ 
 
   useEffect(() => {
     const userToken = localStorage.getItem("userToken");
@@ -60,6 +66,17 @@ const Header = () => {
   }, [data, dispatch, isFetching]);
 
   const pathname = usePathname();
+
+  const handelLogOut = () => {
+    dispatch(logout());
+  };
+
+ 
+  const cartItemsQty = cartItems?.items?.reduce((acc, item) => acc + item.qty, 0);
+
+
+
+
 
   return (
     <>
@@ -222,101 +239,191 @@ const Header = () => {
                   } rounded-full bg-primary transition-all duration-300 group-hover:w-full`}
                 ></span>
               </li>
-              {loading ? (
-                <span className="text-primary animate-pulse">...</span>
-              ) : (
-                <div className="lg:flex items-center hidden">
-                  {userInfo && userInfo.email ? (
-                    <div
-                      ref={dropDownRef}
-                      className="relative flex items-center mx-auto w-fit text-black"
-                    >
-                      <button
-                        onClick={() => setOpen((prev) => !prev)}
-                        className="flex items-center space-x-2"
-                      >
-                        <Image
-                          width={40}
-                          height={40}
-                          className="rounded-full bg-gray-300 object-cover border  duration-500 hover:scale-105 hover:opacity-80 cursor-pointer"
-                          src={userInfo?.image}
-                          alt="User Avatar"
-                        />
-                        <div className="text-left">
-                          <span className="block text-sm font-medium">
-                            Hello, {userInfo?.name}
-                          </span>
-                          <span className="block text-xs font-medium">
-                            Orders & Account
-                          </span>
-                        </div>
-                        <div className=" inline-block">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M19 9l-7 7-7-7"
-                            />
-                          </svg>
-                        </div>
-                      </button>
-                      <ul
-                        className={`${
-                          open
-                            ? "visible duration-300 opacity-100"
-                            : "invisible opacity-0"
-                        } absolute right-0 top-12 z-50 w-fit rounded-sm bg-gray-200 shadow-md`}
-                      >
-                        {items.map((item, idx) => (
-                          <li
-                            key={idx}
-                            className={`rounded-sm px-6 py-2 ${
-                              item === "Log Out"
-                                ? "text-red-500 hover:bg-red-600 hover:text-white"
-                                : "hover:bg-gray-300"
-                            }`}
-                          >
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+              {userInfo?.email ? (
+                <>
+                  {loading ? (
+                    <span className="text-primary animate-pulse">...</span>
                   ) : (
-                    <div className="space-x-4 flex">
-                      <li className="group flex cursor-pointer  flex-col">
-                        <Link href="/login" scroll={false}>
-                          Login
-                        </Link>
-                        <span
-                          className={`mt-[2px] h-[3px] w-[0px] ${
-                            pathname === "/login" ? "w-full" : ""
-                          } rounded-full bg-primary transition-all duration-300 group-hover:w-full`}
-                        ></span>
-                      </li>
-                      <li className="group flex cursor-pointer flex-col">
-                        <Link href="/register" scroll={false}>
-                          Sign up
-                        </Link>
-                        <span
-                          className={`mt-[2px] h-[3px] w-[0px] ${
-                            pathname === "/products" ? "w-full" : ""
-                          } rounded-full bg-primary transition-all duration-300 group-hover:w-full`}
-                        ></span>
-                      </li>
+                    <div className="">
+                      <div className="lg:flex items-center ">
+                        <div
+                          ref={dropDownRef}
+                          className="relative flex items-center mx-auto w-fit text-black"
+                        >
+                          <button
+                            onClick={() => setOpen((prev) => !prev)}
+                            className="flex items-center space-x-2"
+                          >
+                            <Image
+                              width={40}
+                              height={40}
+                              className="rounded-full bg-gray-300 object-cover border duration-500 hover:scale-105 hover:opacity-80 cursor-pointer"
+                              src={userInfo?.image}
+                              alt="User Avatar"
+                            />
+                            <div className="text-left">
+                              <span className="block text-sm font-medium text-gray-800">
+                                {userInfo?.name}
+                              </span>
+                              <span className="block text-xs font-medium text-gray-500">
+                                Orders & Account
+                              </span>
+                            </div>
+                            <div className="inline-block">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5 text-gray-600"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth="2"
+                                  d="M19 9l-7 7-7-7"
+                                />
+                              </svg>
+                            </div>
+                          </button>
+                          <ul
+                            className={`${
+                              open
+                                ? "visible duration-300 opacity-100"
+                                : "invisible opacity-0"
+                            } absolute right-0 top-14 z-50 min-w-60 rounded-sm bg-white shadow-lg border border-gray-200`}
+                          >
+                            <li className="border-b border-gray-200 p-4 bg-primary text-white">
+                              <div className="flex items-center space-x-2">
+                                <Image
+                                  width={40}
+                                  height={40}
+                                  className="rounded-full bg-gray-300 object-cover"
+                                  src={userInfo?.image}
+                                  alt="User Avatar"
+                                />
+                                <div>
+                                  <span className="block text-sm font-medium">
+                                    {userInfo?.name}
+                                  </span>
+                                  <span className="block text-xs font-medium">
+                                    {userInfo?.email}
+                                  </span>
+                                </div>
+                              </div>
+                            </li>
+                            <li className="p-4 hover:bg-gray-100">
+                              <Link
+                                href={`/user/my-cart?userId=${userInfo?._id || userInfo?.id}`}
+                                className="flex items-center space-x-2 text-gray-800"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="h-5 w-5"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M5 12h14M12 5l7 7-7 7"
+                                  />
+                                </svg>
+                                <span>My Cart</span>
+                              </Link>
+                            </li>
+
+                            <li className="p-4 hover:bg-gray-100">
+                              <Link
+                                href="/dashboard/emails"
+                                className="flex items-center space-x-2 text-gray-800"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="h-5 w-5"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M16 11V7a1 1 0 00-1-1H9a1 1 0 00-1 1v4m4 5v-5m0 5V7m0 0L7.5 9m5-2 4.5 2"
+                                  />
+                                </svg>
+                                <span>My Emails</span>
+                              </Link>
+                            </li>
+                            <li className="p-4 hover:bg-gray-100">
+                              <Link
+                                href="/dashboard/change-password"
+                                className="flex items-center space-x-2 text-gray-800"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="h-5 w-5"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M12 15v-3m0-4h0m-2 4h4"
+                                  />
+                                </svg>
+                                <span>Change Password</span>
+                              </Link>
+                            </li>
+
+                            <li className="p-4 border-t border-gray-200 hover:bg-gray-100">
+                              <button
+                                onClick={handelLogOut}
+                                className="flex items-center space-x-2 text-gray-800"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="h-5 w-5"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M15 12H3m6-6-6 6 6 6"
+                                  />
+                                </svg>
+                                <span>Logout</span>
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
                     </div>
                   )}
-                </div>
+                </>
+              ) : (
+                <>
+                  <li className="group flex cursor-pointer flex-col">
+                    <Link href="/login" scroll={false}>
+                      Login
+                    </Link>
+                    <span
+                      className={`mt-[2px] h-[3px] w-[0px] ${
+                        pathname === "/login" ? "w-full" : ""
+                      } rounded-full bg-primary transition-all duration-300 group-hover:w-full`}
+                    ></span>
+                  </li>
+                </>
               )}
-
               <div className="flex items-center relative mt-4 lg:mt-0">
-                <a href="#" className="">
+                <Link href={`/user/my-cart?userId=${userInfo?._id || userInfo?.id}`} className="">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6 "
@@ -325,18 +432,21 @@ const Header = () => {
                   >
                     <path d="M3 3a1 1 0 000 2h2l3.6 7.59-1.35 2.44A1 1 0 008 17h7a1 1 0 100-2H8.42l1.1-2h5.25a1 1 0 00.97-.76l1.38-6A1 1 0 0016.1 4H5.21l-.94-2H3zM5 19a2 2 0 100-4 2 2 0 000 4zm10 0a2 2 0 100-4 2 2 0 000 4z" />
                   </svg>
-                </a>
+                </Link>
                 <span className="absolute lg:-right-2 -top-2  inline-flex items-center justify-center h-5 w-5 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
-                  3
+                  {cartItemsQty || 0}
                 </span>
               </div>
             </div>
           </div>
-          <div className=" overflow-hidden bg-red-600 text-white font-bold py-2">
-            <div className=" whitespace-nowrap animate-marquee">
+          {/* <div className=" overflow-hidden  relative bg-red-600 text-white font-bold py-2">
+
+            <h1 className="absolute left-0 top-0 border z-20 bg-white text-gray-700 px-4 py-3">Update</h1>
+            <div className=" whitespace-nowrap animate-marquee ">
               <span>
                 আমাদের ওয়েবসাইটটি আপডেটের কাজ চলছে। সাময়িক অসুবিধার জন্য আমরা
-                দুঃখিত। আপনারা আমাদের সাথে  ***01754493353 ***               <a
+                দুঃখিত। আপনারা আমাদের সাথে ***01754493353 ***{" "}
+                <a
                   href="https://wa.me/01754493353"
                   className="text-yellow-300 underline ml-2"
                   target="_blank"
@@ -346,7 +456,7 @@ const Header = () => {
                 </a>
               </span>
             </div>
-          </div>
+          </div> */}
         </Container>
       </section>
     </>
