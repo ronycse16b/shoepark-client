@@ -46,6 +46,8 @@ const ProductList = ({ searchData }) => {
     }
   }, [searchData?.id]);
 
+  
+
   // Calculate total pages
   const totalPages = Math.ceil(products.length / productsPerPage);
 

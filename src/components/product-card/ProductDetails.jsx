@@ -30,7 +30,7 @@ export default function ProductDetails({ singleData }) {
   const [currentSlider, setCurrentSlider] = useState(0);
   const sliders = singleData?.images || [];
   const [isMounted, setIsMounted] = useState(false);
-  const [isValid, setIsValid] = useState(true);
+  
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 
   useEffect(() => {
@@ -85,8 +85,7 @@ export default function ProductDetails({ singleData }) {
   const userId = userInfo?._id || userInfo?.id;
   const {
     data: cartItems = [],
-    error,
-    isLoading,
+    
     refetch,
   } = useGetAllOrdersByUserQuery(userId);
 
@@ -130,7 +129,7 @@ export default function ProductDetails({ singleData }) {
       toast.error("Please select a size");
     }
   };
-
+//  update something else
   return (
     <Container>
       <section className="my-10">
