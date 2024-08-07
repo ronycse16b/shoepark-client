@@ -13,7 +13,7 @@ export const authApi = createApi({
       }
     },
   }),
-  tagTypes: ["product", "User"],
+  tagTypes: ["Category", "SubCategory", "ChildCategory", "Product", "User"],
   endpoints: (build) => ({
     userProfile: build.query({
       query: () => ({
@@ -46,8 +46,25 @@ export const authApi = createApi({
         method: "POST",
         body: formData,
       }),
-      invalidatesTags: ["product"], // Adjust if needed
+      invalidatesTags: ["Product"], // Adjust if needed
     }),
+
+
+    // New endpoints
+    getAllCategories: build.query({
+      query: () => "api/data/categories",
+      providesTags: ["Category"],
+    }),
+    getSubCategories: build.query({
+      query: (parentId) => `api/data/sub-by-parentId/${parentId}`,
+      providesTags: ["SubCategory"],
+    }),
+    getChildCategories: build.query({
+      query: (subcategoryId) => `api/data/child-by-subcategoryId/${subcategoryId}`,
+      providesTags: ["ChildCategory"],
+    }),
+   
+  
   }),
 });
 
@@ -57,4 +74,7 @@ export const {
   useAddProductDataMutation,
   useGetAllOrdersQuery,
   useGetAllOrdersByUserQuery,
+  useGetAllCategoriesQuery,
+  useGetSubCategoriesQuery,
+  useGetChildCategoriesQuery,
 } = authApi;

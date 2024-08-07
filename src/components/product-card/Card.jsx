@@ -27,14 +27,14 @@ const Card = ({ product }) => {
             src={product?.thumbnail || product?.images[0] || "/placeholder.png"}
             alt={product?.productName || "Product Image"}
             layout="fill"
-            objectFit="cover"
-            className="rounded-t-md"
+            objectFit="center"
+            className="rounded-t-md object-fill w-full h-full"
           />
         </Link>
         <div className="pt-2">
           {discountPercentage && (
             <span className="font-medium text-white px-2 py-1 lg:py-2 text-xs md:text-md lg:text-md relative w-10 h-10 bg-secondary z-20 dark:text-red-400">
-              {discountPercentage}% off
+              - {discountPercentage}% OFF
             </span>
           )}
         </div>
@@ -68,16 +68,23 @@ const Card = ({ product }) => {
           </span>
         </div>
         <div className="lg:mt-3 flex flex-col md:flex-row items-center justify-between">
-          <div className="space-x-2">
-            {product?.sizes?.[0]?.price && (
-              <span className="text-[#66cc00] line-through text-xs font-semibold lg:text-[14px] dark:text-white/60">
-                ৳ {product?.sizes?.[0]?.price}
+          {product?.sizes?.[0]?.discount > 0 ? (
+            <div className="space-x-2">
+              {product?.sizes?.[0]?.price && (
+                <span className="text-[#66cc00] line-through text-xs font-semibold lg:text-[14px] dark:text-white/60">
+                  ৳ {product?.sizes?.[0]?.price}
+                </span>
+              )}
+              <span className="text-primary text-xs font-semibold lg:text-[14px] dark:text-white/60">
+                ৳ {product?.sizes?.[0]?.discount}
               </span>
-            )}
-            <span className="text-primary text-xs font-semibold lg:text-[14px] dark:text-white/60">
-              ৳ {product?.sizes?.[0]?.discount}
+            </div>
+          ) : (
+            <span className="text-[#66cc00]  text-xs font-semibold lg:text-[14px] dark:text-white/60">
+              ৳ {product?.sizes?.[0]?.price}
             </span>
-          </div>
+          )}
+
           <Link
             href={`/products/${product?.slug}`}
             className="rounded-lg bg-primary px-3 mb-3 shadow-md py-1 text-xs sm:text-sm md:text-base font-semibold text-white hover:bg-opacity-85"

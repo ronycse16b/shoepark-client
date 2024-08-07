@@ -65,7 +65,7 @@ export default async function Home({ searchParams }) {
         </main>
       </Container>
 
-      <Container>
+      {/* <Container>
       <div
         className="mb-8 p-2"
         data-aos="fade-up"
@@ -82,7 +82,7 @@ export default async function Home({ searchParams }) {
           className="rounded-lg h-[300px] lg:h-[400px]"
         ></iframe>
       </div>
-    </Container>
+    </Container> */}
     </>
   );
 }

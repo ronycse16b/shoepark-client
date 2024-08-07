@@ -149,7 +149,7 @@ const OrderManagement = () => {
 
   return (
     <>
-      <div className="py-4 ">
+      <div className="sm:p-7 border border-gray-300 rounded-lg bg-gray-50 my-10 ">
         <h1 className="text-gray-700 my-5 lg:text-xl">Orders Management</h1>
         <div className="mb-4 flex lg:flex-col flex-wrap gap-4 ">
           <div className="flex flex-wrap lg:flex-row gap-1">

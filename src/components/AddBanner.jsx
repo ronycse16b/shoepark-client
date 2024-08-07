@@ -18,6 +18,7 @@ export default function FileUpload5() {
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(null);
+  const [error,setError] = useState('')
   const fileInputRef = useRef();
 
   const { userInfo } = useSelector((state) => state.auth);
@@ -35,7 +36,9 @@ export default function FileUpload5() {
       setBannerImages(res.data.data);
     } catch (error) {
       console.log("Error getting banner images", error);
-      setIsLoading(false);
+
+
+    
     } finally {
       setIsLoading(false);
     }
@@ -92,6 +95,7 @@ export default function FileUpload5() {
       }
     } catch (error) {
       console.error("Error sending data", error);
+      toast.error(error.message);
       setLoading(false);
     }
   };
@@ -114,7 +118,7 @@ export default function FileUpload5() {
   };
 
   return (
-    <div className=" mx-auto ">
+    <div className=" sm:p-7 border border-gray-300 rounded-lg bg-gray-50 my-10">
       <h1 className="text-gray-700 my-5 text-2xl">Manage Banners</h1>
       <div className="my-5">
         {isLoading && "Loading..."}
@@ -176,7 +180,7 @@ export default function FileUpload5() {
         </div>
       </div>
       <h1 className="border-b border-white mb-3">All Banners</h1>
-      <div className="overflow-auto h-[260px] grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
+      <div className="overflow-auto  grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
         {bannerImages?.map((b, index) => (
           <div key={index} className="relative ">
             <Image

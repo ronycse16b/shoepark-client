@@ -191,7 +191,7 @@ const AddChildCategory = () => {
 
   return (
     <section className="">
-      <div className="p-4 bg-white mt-10 rounded-md">
+      <div className="sm:p-7 border border-gray-300 rounded-lg bg-gray-50 my-10">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-gray-700  text-2xl">Manage Child Categories</h1>
           <button
@@ -223,7 +223,7 @@ const AddChildCategory = () => {
             </select>
             <span className="ml-2">entries</span>
           </div>
-          <div className="flex items-center px-1 text-white  bg-primary py-0.5  rounded">
+          <div className="flex items-center px-1 text-white  bg-gray-600 py-0.5  rounded">
             <label htmlFor="search" className="mr-2 px-2">
               Search:
             </label>
@@ -239,7 +239,7 @@ const AddChildCategory = () => {
         </div>
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white">
-            <thead className="bg-primary text-white shadow mb-4">
+            <thead className="bg-gray-600 text-white shadow mb-4">
               <tr>
                 <th className="w-16 py-2 px-2 text-lef  border-r border-white">
                   SL

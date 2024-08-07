@@ -58,3 +58,17 @@ body {
 }
 
 
+.progress-bar-container {
+  background-color: #e5e7eb; /* Light gray background */
+  border-radius: 4px;
+  height: 8px; /* Adjust height as needed */
+  width: 100%;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #4caf50; /* Green color */
+  transition: width 0.3s ease; /* Smooth width transition */
+}

@@ -211,8 +211,8 @@ export default function DashBoardCard() {
   }, 0);
 
   return (
-    <div className=" ">
-      <h1 className="text-gray-700 my-5 lg:text-xl">Dashboard</h1>
+    <div className=" sm:p-7 border border-gray-300 rounded-lg bg-gray-50 my-10">
+      <h1 className="text-gray-700  lg:text-xl">Dashboard</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
       <div className="bg-gradient-to-r from-blue-500 to-blue-700 text-white p-4 rounded shadow flex justify-between items-center">
         <div>
